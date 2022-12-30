@@ -22,20 +22,16 @@ router.post("/register", async (req, res) => {
   }
 });
 
-
-
-
 //Login User
 router.post("/login", async (req, res) => {
   try {
     //username validation
     const user = await User.findOne({ username: req.body.username });
     !user && res.status(400).json("Wrong Credentials");
-    
+
      //Pasword validation
     const validated = await bcrypt.compare(req.body.password, user.password);
     !validated && res.status(400).json("Wrong Credentilas -> password does not matched");
-   
    
     //Exclude password field form list when user is  loggen in
     const { password, ...data } = user._doc;

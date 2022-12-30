@@ -5,7 +5,7 @@ const port = 3000;
 require("./mongodb");
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/users');
-
+const postRoute = require('./routes/posts');
 //  main page
 app.use(express.json());
 app.get("/", (req, res) => {
@@ -25,6 +25,7 @@ app.get("/api/auth/login", (req, res) => {
 
 app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
+app.use('/api/posts', postRoute);
 // Running Serper port
 app.listen(port, () => {
   console.log(`Server is runnig on port Number ${port}`);
