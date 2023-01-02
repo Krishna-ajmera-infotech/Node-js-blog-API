@@ -57,5 +57,15 @@ router.get("/:id", async (req, res) => {
     res.status(500).json(err);
   }
 });
+// Get all user details data
+router.get("/", async (req, res) => {
+  try {
+    const result = await User.find();
+    const { password, ...data } = result;
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;
