@@ -1,45 +1,41 @@
-const express = require("express");
-var bodyParser = require('body-parser');
-const cors = require('cors');
-var fs = require('fs');
-var morgan = require('morgan');
-const dotenv =  require("dotenv").config();
-const app = express();
-require("./mongodb");
-// Added library to get current directory name
-var path = require('path');
-// Custom route of the API 
-const authRoute = require('./routes/auth');
-const userRoute = require('./routes/users');
-const postRoute = require('./routes/posts');
-//Assign a short variable name to the enviermental variable
-const port =  process.env.PORT_NUMBER;
+// index.js
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import path from 'path';
+import authRoute from './routes/auth.js';
+import userRoute from './routes/users.js';
+import postRoute from './routes/posts.js';
+import connectToMongoDB from './mongodb.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
-// create a write stream (in append mode)
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
-// setup the logger
-// app.use(morgan('combined'));
-app.use(morgan('combined', { stream: accessLogStream }));
+const app = express();
+const port = process.env.PORT_NUMBER || 3000;
 
 //  Middleware initializations
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
 
+app.use(express.static("public"));
 
-
-app.use(express.static('public'));
-app.use('/static', express.static(path.join(__dirname, 'public')));
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+app.get("/", (req, res) => {
+  res.send("Hello World!");
 });
 
 // Api routes
-app.use('/api/auth', authRoute);
-app.use('/api/users', userRoute);
-app.use('/api/posts', postRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
+app.use("/api/posts", postRoute);
 
 // server information
-app.listen(port, () => {
-  console.log(`Server is runnig on the port number ${port}`);
+connectToMongoDB().then(() => {
+  // Start the server after successful MongoDB connection
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}).catch(err => {
+  console.error('Failed to connect to MongoDB:', err);
 });

@@ -1,23 +1,16 @@
-// const mongoose = require('mongoose');
-// mongoose.set('strictQuery', true);
-//  mongoose.connect(`${process.env.MONGO_URL}/${process.env.MONGO_DATABASE}`)
-//  .then(() => {
-//    console.log("Connection Successful! ");
-//  })
-//  .catch((err) => {
-//    console.log(err);
-//  });
+import mongoose from 'mongoose';
 
-const mongoose = require("mongoose");
+const connectToMongoDB = async () => {
+  try {
+    const url = "mongodb://127.0.0.1:27017/mydatabase"; // Replace with your MongoDB database name
+    mongoose.set('strictQuery', true); // Optionally set mongoose options
 
-mongoose.set("strictQuery", true);
-mongoose.connect(`${process.env.MONGO_URL}/${process.env.MONGO_DATABASE}`);
+    await mongoose.connect(url);
+    console.log("Connected successfully to MongoDB");
+  } catch (err) {
+    console.error("Connection error", err);
+    // Handle connection error as needed
+  }
+};
 
-const db = mongoose.connection;
-
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", function () {
-  console.log("We're connected to the database!");
-});
-
-module.exports = { db };
+export default connectToMongoDB;

@@ -1,7 +1,9 @@
-const router = require("express").Router();
-const bcrypt = require("bcrypt");
-const User = require("../models/User");
+import express from "express";
 
+import bcrypt from "bcrypt";
+import User from "../models/User.js";
+
+const router = express.Router();
 // Register user
 router.post("/register", async (req, res) => {
   try {
@@ -29,17 +31,17 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ username: req.body.username });
     !user && res.status(400).json("Wrong Credentials");
 
-     //Pasword validation
+    //Pasword validation
     const validated = await bcrypt.compare(req.body.password, user.password);
-    !validated && res.status(400).json("Wrong Credentilas -> password does not matched");
-   
+    !validated &&
+      res.status(400).json("Wrong Credentilas -> password does not matched");
+
     //Exclude password field form list when user is  loggen in
     const { password, ...data } = user._doc;
     res.status(200).json(data);
-  } 
-  catch (err) {
+  } catch (err) {
     res.status(500).json(err);
   }
 });
 
-module.exports = router;
+export default router;
