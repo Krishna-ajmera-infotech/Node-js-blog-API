@@ -4,9 +4,8 @@ const connectToMongoDB = async () => {
   try {
     const url = "mongodb://127.0.0.1:27017/mydatabase"; // Replace with your MongoDB database name
     mongoose.set('strictQuery', true); // Optionally set mongoose options
-
     await mongoose.connect(url);
-    console.log("Connected successfully to MongoDB");
+    console.log("Database is connected successfully!");
   } catch (err) {
     console.error("Connection error", err);
     // Handle connection error as needed
