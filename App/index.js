@@ -36,6 +36,16 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+// Track all requests
+app.all("/*", function (req, res, next) {
+  console.log("-------------- New Request --------------");
+  appInsights.defaultClient.trackRequest({
+    request: req,
+    response: res,
+  });
+  next(); // Continue to the next handler
+});
+
 // Api routes
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
